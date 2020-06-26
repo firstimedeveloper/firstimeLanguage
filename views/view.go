@@ -27,7 +27,7 @@ func (v *View) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	v.Render(w, r, nil)
 }
 
-//Render is used to render the view with the predefined layout.
+// Render is used to render the view with the predefined layout.
 func (v *View) Render(w http.ResponseWriter, r *http.Request, data interface{}) {
 	w.Header().Set("Content-Type", "text/html")
 	var vd Data
@@ -74,8 +74,8 @@ func NewView(layout string, files ...string) *View {
 	}
 }
 
-//layoutFiles returns a slice of strings representing
-//the layout files used in our application.
+// layoutFiles returns a slice of strings representing
+// the layout files used in our application.
 func layoutFiles() []string {
 	files, err := filepath.Glob(LayoutDir + "*" + TemplateExt)
 	if err != nil {

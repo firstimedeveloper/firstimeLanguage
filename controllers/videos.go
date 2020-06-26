@@ -79,7 +79,7 @@ func (t *Transcript) parseSubtitles(link string) error {
 	}
 	defer resp.Body.Close()
 	if resp.StatusCode != 200 {
-		return errors.Errorf("Response status: ", resp.Status)
+		return errors.Errorf("Response status: %s", resp.Status)
 	}
 
 	subXML, err := ioutil.ReadAll(resp.Body)
