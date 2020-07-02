@@ -56,16 +56,16 @@ func (v *Video) Show(w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 		return
 	}
-
 	//fmt.Fprintf(w, "Retrieving video subtitles from %s", form.Link)
 	vd.Yield = v.Transcript.Text
 	v.ShowView.Render(w, r, vd)
 }
 
 type Text struct {
-	Line  string `xml:",chardata"`
-	Start string `xml:"start,attr"`
-	Dur   string `xml:"dur,attr"`
+	Line  string  `xml:",chardata"`
+	Start float64 `xml:"start,attr"`
+	Dur   float64 `xml:"dur,attr"`
+	End   float64 `-`
 }
 
 type Transcript struct {
@@ -93,13 +93,16 @@ func (t *Transcript) parseSubtitles(link string) error {
 		return err
 	}
 	t.Text = sub.Text
+	for i := range t.Text {
+		t.Text[i].End = t.Text[i].Start + t.Text[i].Dur
+	}
 	return nil
 }
 
 func (t *Transcript) String() string {
 	var str strings.Builder
 	for _, v := range t.Text {
-		str.WriteString(fmt.Sprintf("%s-%s: %s\n", v.Start, v.Dur, v.Line))
+		str.WriteString(fmt.Sprintf("%f-%f: %s\n", v.Start, v.End, v.Line))
 	}
 
 	return str.String()
