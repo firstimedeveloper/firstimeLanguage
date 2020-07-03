@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/pkg/errors"
@@ -62,10 +63,10 @@ func (v *Video) Show(w http.ResponseWriter, r *http.Request) {
 }
 
 type Text struct {
-	Line  string  `xml:",chardata"`
-	Start float64 `xml:"start,attr"`
-	Dur   float64 `xml:"dur,attr"`
-	End   float64 `-`
+	Line  string `xml:",chardata"`
+	Start string `xml:"start,attr"`
+	Dur   string `xml:"dur,attr"`
+	End   string `-`
 }
 
 type Transcript struct {
@@ -94,7 +95,17 @@ func (t *Transcript) parseSubtitles(link string) error {
 	}
 	t.Text = sub.Text
 	for i := range t.Text {
-		t.Text[i].End = t.Text[i].Start + t.Text[i].Dur
+		tempStart, err := strconv.ParseFloat(t.Text[i].Start, 64)
+		if err != nil {
+			return errors.Errorf("Unable to parse tempStart: %v", err)
+		}
+		tempDur, err := strconv.ParseFloat(t.Text[i].Dur, 64)
+		if err != nil {
+			return errors.Errorf("Unable to parse tempStart: %v", err)
+		}
+
+		num := tempStart + tempDur
+		t.Text[i].End = strconv.FormatFloat(num, 'f', 2, 64)
 	}
 	return nil
 }
@@ -102,7 +113,7 @@ func (t *Transcript) parseSubtitles(link string) error {
 func (t *Transcript) String() string {
 	var str strings.Builder
 	for _, v := range t.Text {
-		str.WriteString(fmt.Sprintf("%f-%f: %s\n", v.Start, v.End, v.Line))
+		str.WriteString(fmt.Sprintf("%s-%s: %s\n", v.Start, v.End, v.Line))
 	}
 
 	return str.String()
