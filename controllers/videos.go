@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"math"
 	"net/http"
 	"strconv"
 	"strings"
@@ -62,11 +63,25 @@ func (v *Video) Show(w http.ResponseWriter, r *http.Request) {
 	v.ShowView.Render(w, r, vd)
 }
 
+type Time string
+
+func (t Time) String() string {
+	temp, err := strconv.ParseFloat(string(t), 64)
+	if err != nil {
+		panic(err)
+	}
+	if temp >= 60 {
+		min := math.Floor(temp / 60)
+		return fmt.Sprintf("%1.f:%.2f", min, temp-60*min)
+	}
+	return fmt.Sprintf("%.2f", temp)
+}
+
 type Text struct {
 	Line  string `xml:",chardata"`
-	Start string `xml:"start,attr"`
-	Dur   string `xml:"dur,attr"`
-	End   string `-`
+	Start Time   `xml:"start,attr"`
+	Dur   Time   `xml:"dur,attr"`
+	End   Time   `-`
 }
 
 type Transcript struct {
@@ -95,17 +110,17 @@ func (t *Transcript) parseSubtitles(link string) error {
 	}
 	t.Text = sub.Text
 	for i := range t.Text {
-		tempStart, err := strconv.ParseFloat(t.Text[i].Start, 64)
+		tempStart, err := strconv.ParseFloat(string(t.Text[i].Start), 64)
 		if err != nil {
 			return errors.Errorf("Unable to parse tempStart: %v", err)
 		}
-		tempDur, err := strconv.ParseFloat(t.Text[i].Dur, 64)
+		tempDur, err := strconv.ParseFloat(string(t.Text[i].Dur), 64)
 		if err != nil {
 			return errors.Errorf("Unable to parse tempStart: %v", err)
 		}
 
 		num := tempStart + tempDur
-		t.Text[i].End = strconv.FormatFloat(num, 'f', 2, 64)
+		t.Text[i].End = Time(strconv.FormatFloat(num, 'f', 2, 64))
 	}
 	return nil
 }
