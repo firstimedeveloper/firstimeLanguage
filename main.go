@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"firstimelang/controllers"
+	"github.com/firstimedeveloper/firstimeLanguage/controllers"
 
 	"github.com/gorilla/mux"
 )

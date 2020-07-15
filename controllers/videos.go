@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"encoding/xml"
-	"firstimelang/views"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -10,6 +9,8 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+
+	"github.com/firstimedeveloper/firstimeLanguage/views"
 
 	"github.com/pkg/errors"
 )
