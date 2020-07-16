@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"firstimeLanguage/controllers"
+	"firstimeLanguage.com/controllers"
 
 	"github.com/gorilla/mux"
 )
@@ -14,6 +14,8 @@ func main() {
 	r := mux.NewRouter()
 	assetHandler := http.FileServer(http.Dir("./assets/"))
 	r.PathPrefix("/assets/").Handler(http.StripPrefix("/assets/", assetHandler))
+	uiHandler := http.FileServer(http.Dir("./ui/"))
+	r.PathPrefix("/ui/").Handler(http.StripPrefix("/ui/", uiHandler))
 
 	s := controllers.NewStatic()
 	r.Handle("/", s.Home).Methods("GET")
