@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/firstimedeveloper/firstimeLanguage/controllers"
+	"firstimeLanguage/controllers"
 
 	"github.com/gorilla/mux"
 )
@@ -15,10 +15,11 @@ func main() {
 	assetHandler := http.FileServer(http.Dir("./assets/"))
 	r.PathPrefix("/assets/").Handler(http.StripPrefix("/assets/", assetHandler))
 
-	video := controllers.NewVideo()
-	r.HandleFunc("/", video.New).Methods("GET")
-	r.HandleFunc("/new", video.New).Methods("GET")
-	r.HandleFunc("/new", video.Show).Methods("POST")
+	s := controllers.NewStatic()
+	r.Handle("/", s.Home).Methods("GET")
+	r.Handle("/contact", s.Contact).Methods("GET")
+	r.Handle("/faq", s.Faq).Methods("GET")
+
 	fmt.Println("Listening on port", port)
 	http.ListenAndServe(fmt.Sprintf("localhost:%d", port), r)
 }
