@@ -1,4 +1,4 @@
-module firstimeLanguage
+module firstimeLanguage.com
 
 go 1.13
 

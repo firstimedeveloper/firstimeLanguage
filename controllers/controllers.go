@@ -1,14 +1,14 @@
 package controllers
 
 import (
-	"firstimeLanguage/views"
+	"firstimeLanguage.com/views"
 )
 
 func NewStatic() *Static {
 	return &Static{
-		Home:    views.NewView("bootstrap", "layouts/home"),
-		Faq:     views.NewView("bootstrap", "layouts/faq"),
-		Contact: views.NewView("bootstrap", "layouts/contact"),
+		Home:    views.NewView("bootstrap", "static/home"),
+		Faq:     views.NewView("bootstrap", "static/faq"),
+		Contact: views.NewView("bootstrap", "static/contact"),
 	}
 }
 

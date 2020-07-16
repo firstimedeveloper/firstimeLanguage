@@ -3,7 +3,6 @@ package views
 import (
 	"bytes"
 	"errors"
-	"fmt"
 	"html/template"
 	"io"
 	"log"
@@ -60,10 +59,6 @@ func (v *View) Render(w http.ResponseWriter, r *http.Request, data interface{}) 
 func NewView(layout string, files ...string) *View {
 	addTemplatePath(files)
 	addTemplateExt(files)
-	for a := range files {
-		fmt.Println(a)
-
-	}
 	files = append(files, layoutFiles()...)
 	t, err := template.New("").Funcs(template.FuncMap{
 		"csrfField": func() (template.HTML, error) {
