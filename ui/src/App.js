@@ -1,26 +1,85 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { Fragment, useState, useEffect } from 'react';
+import axios from 'axios';
+//import logo from './logo.svg';
 import './App.css';
 
+const useDataApi = (initialUrl) => {
+  const [data, setData] = useState({lines: []});
+  const [url, setUrl] = useState(initialUrl);
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
+ 
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsError(false);
+      setIsLoading(true);
+      try {
+        const result = await axios(url);
+  
+        setData(result.data);
+      } catch (error) {
+        setIsError(true);
+      }
+      setIsLoading(false);
+    };
+ 
+    fetchData();
+  }, [url]);
+
+  return [{data, isLoading, isError}, setUrl];
+}
+
 function App() {
+  const [id, setId] = useState('dL5oGKNlR6I');
+  const [lang, setLang] = useState('de');
+  const [tlang, setTlang] = useState('');
+
+  const [{ data, isLoading, isError }, doFetch] = useDataApi(
+    'https://junhyukhan.herokuapp.com/new',
+  );
+
+ 
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Fragment>
+      <form onSubmit={event => {
+          doFetch(`https://junhyukhan.herokuapp.com/new?id=${id}&lang=${lang}&tlang=${tlang}`);
+          event.preventDefault();
+      }}>
+        <input
+          type="text"
+          value={id}
+          onChange={event => setId(event.target.value)}
+        />
+        <input
+          type="text"
+          value={lang}
+          onChange={event => setLang(event.target.value)}
+        />
+        <input
+          type="text"
+          value={tlang}
+          onChange={event => setTlang(event.target.value)}
+        />
+        <button type="submit">Search</button>
+      </form>
+      {isError && <div>Something went wrong...</div>}
+
+      {isLoading ? (
+        <div>Loading...</div>
+      ) : (
+        <ul>
+          {data.lines.map(line => (
+            <li key={line.start}>
+              {line.start}-{line.end} {line.text}
+            </li>
+          ))}
+        </ul>
+      )}
+        
+    </Fragment>
   );
 }
+
 
 export default App;
