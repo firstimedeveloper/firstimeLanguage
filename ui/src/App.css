@@ -2,6 +2,25 @@
   text-align: center;
 }
 
+.wrapper {
+  display: grid;
+  margin-top: 50px;
+  border-width: 1px;
+  border-color: #282c34;
+  grid-template-columns:
+    minmax(1.2rem, 1fr)
+    minmax(auto, 70ch)
+    minmax(1.2rem, 1fr);
+}
+
+table, form {
+  grid-column: 2;
+}
+
+.time_subtitle {
+  grid-column: 1;
+}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;

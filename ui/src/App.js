@@ -41,43 +41,48 @@ function App() {
 
  
   return (
-    <Fragment>
-      <form onSubmit={event => {
-          doFetch(`https://junhyukhan.herokuapp.com/new?id=${id}&lang=${lang}&tlang=${tlang}`);
-          event.preventDefault();
-      }}>
-        <input
-          type="text"
-          value={id}
-          onChange={event => setId(event.target.value)}
-        />
-        <input
-          type="text"
-          value={lang}
-          onChange={event => setLang(event.target.value)}
-        />
-        <input
-          type="text"
-          value={tlang}
-          onChange={event => setTlang(event.target.value)}
-        />
-        <button type="submit">Search</button>
-      </form>
-      {isError && <div>Something went wrong...</div>}
+    <div class="wrapper">
+      <Fragment>
+        <form onSubmit={event => {
+            doFetch(`https://junhyukhan.herokuapp.com/new?id=${id}&lang=${lang}&tlang=${tlang}`);
+            event.preventDefault();
+        }}>
+          <input
+            type="text"
+            value={id}
+            onChange={event => setId(event.target.value)}
+          />
+          <input
+            type="text"
+            value={lang}
+            onChange={event => setLang(event.target.value)}
+          />
+          <input
+            type="text"
+            value={tlang}
+            onChange={event => setTlang(event.target.value)}
+          />
+          <button type="submit">Search</button>
+        </form>
+        {isError && <div>Something went wrong...</div>}
 
-      {isLoading ? (
-        <div>Loading...</div>
-      ) : (
-        <ul>
-          {data.lines.map(line => (
-            <li key={line.start}>
-              {line.start}-{line.end} {line.text}
-            </li>
-          ))}
-        </ul>
-      )}
-        
-    </Fragment>
+        {isLoading ? (
+          <div>Loading...</div>
+        ) : (
+          <table>
+            <tbody>
+            {data.lines.map(line => (
+              <tr key={line.start}>
+                <td className="time_subtitle">{line.start}-{line.end}</td>
+                <td>{line.text}</td>
+              </tr>
+            ))}
+            </tbody>
+          </table>
+        )}
+          
+      </Fragment>
+    </div>
   );
 }
 
