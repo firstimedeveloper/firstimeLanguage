@@ -13,7 +13,7 @@
     minmax(1.2rem, 1fr);
 }
 
-table, form {
+table, form, div {
   grid-column: 2;
 }
 
