@@ -3,28 +3,30 @@ import axios from 'axios';
 //import logo from './logo.svg';
 import './App.css';
 
-const useDataApi = (initialUrl) => {
+const useDataApi = () => {
   const [data, setData] = useState({lines: []});
-  const [url, setUrl] = useState(initialUrl);
+  const [url, setUrl] = useState("");
 
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
  
   useEffect(() => {
-    const fetchData = async () => {
-      setIsError(false);
-      setIsLoading(true);
-      try {
-        const result = await axios(url);
-  
-        setData(result.data);
-      } catch (error) {
-        setIsError(true);
-      }
-      setIsLoading(false);
-    };
- 
-    fetchData();
+    if (url !== "") {
+      const fetchData = async () => {
+        setIsError(false);
+        setIsLoading(true);
+        try {
+          const result = await axios(url);
+    
+          setData(result.data);
+        } catch (error) {
+          setIsError(true);
+        }
+        setIsLoading(false);
+      };
+   
+      fetchData();
+    } 
   }, [url]);
 
   return [{data, isLoading, isError}, setUrl];
@@ -138,8 +140,9 @@ function Search(props) {
 
 function App() {
   const [{ data, isLoading, isError }, doFetch] = useDataApi(
-    'https://junhyukhan.herokuapp.com/new',
+    // 'https://junhyukhan.herokuapp.com/new',
   );
+  const search = <Search doFetch={doFetch}/>;
 
   const transcriptView = isLoading ? (
     <div>Loading...</div>
@@ -159,7 +162,7 @@ function App() {
   return (
     <div class="wrapper">
       <Fragment>
-        <Search doFetch={doFetch}/>
+        {search}
         {isError ? <div>Something went wrong...</div> : transcriptView}
         
           
