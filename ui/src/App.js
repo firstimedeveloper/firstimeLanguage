@@ -3,9 +3,9 @@ import axios from 'axios';
 //import logo from './logo.svg';
 import './App.css';
 
-const useDataApi = () => {
-  const [data, setData] = useState({lines: []});
-  const [url, setUrl] = useState("");
+const useDataApi = (initialUrl = "") => {
+  const [data, setData] = useState({lines: [], track: []});
+  const [url, setUrl] = useState(initialUrl);
 
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
@@ -41,7 +41,7 @@ function Search(props) {
       props.doFetch(`https://junhyukhan.herokuapp.com/new?id=${id}&lang=${lang}&tlang=${tlang}`);
       event.preventDefault();
   }}>
-    <label for="id">Video ID </label>
+    <label htmlFor="id">Video ID </label>
     <input
       name="id"
       id="id"
@@ -49,7 +49,7 @@ function Search(props) {
       value={id}
       onChange={event => setId(event.target.value)}
     />
-    <label for="lang">Available subtitle language </label>
+    <label htmlFor="lang">Available subtitle language </label>
     <input
       name="lang"
       id="lang"
@@ -160,7 +160,7 @@ function App() {
   );
 
   return (
-    <div class="wrapper">
+    <div className="wrapper">
       <Fragment>
         {search}
         {isError ? <div>Something went wrong...</div> : transcriptView}
@@ -171,6 +171,6 @@ function App() {
   );
 }
 
-const langList = {"track":[{"langCode":"en"},{"langCode":"ja"}]};
+const langListd = {"track":[{"langCode":"de"},{"langCode":"ja"},{"langCode":"en"}]};
 
 export default App;
