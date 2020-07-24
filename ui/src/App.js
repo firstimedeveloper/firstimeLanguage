@@ -2,9 +2,10 @@ import React, { Fragment, useState, useEffect } from 'react';
 import axios from 'axios';
 //import logo from './logo.svg';
 import './App.css';
+import { findByTestId } from '@testing-library/react';
 
 const useDataApi = (initialUrl = "") => {
-  const [data, setData] = useState({lines: [], track: []});
+  const [data, setData] = useState({track: [], lines: []});
   const [url, setUrl] = useState(initialUrl);
 
   const [isLoading, setIsLoading] = useState(false);
@@ -12,6 +13,7 @@ const useDataApi = (initialUrl = "") => {
  
   useEffect(() => {
     if (url !== "") {
+      console.log(url)
       const fetchData = async () => {
         setIsError(false);
         setIsLoading(true);
@@ -33,11 +35,93 @@ const useDataApi = (initialUrl = "") => {
 }
 
 function Search(props) {
-  const [id, setId] = useState('dL5oGKNlR6I');
-  const [lang, setLang] = useState('de');
+  const [id, setId] = useState('');
+  const [lang, setLang] = useState('');
   const [tlang, setTlang] = useState('');
+
+  // for fetching langList
+  const [{ data, isLoading, isError }, doFetch] = useDataApi();
+
+  const langListView = data ? (
+    data.track.map(line => (
+      <option key={line.langCode} value={line.langCode}>{line.langCode}</option>
+    ))
+  ) : (
+    <option value="">Unavailable</option>
+  );
+
+  const handleSubmit = async (e) => {
+    doFetch(`https://junhyukhan.herokuapp.com/list?id=${id}`);
+    console.log(data.track)
+    props.doFetch(`https://junhyukhan.herokuapp.com/new?id=${id}&lang=${lang}&tlang=${tlang}`);
+    e.preventDefault();
+  }
+
+  return ( 
+    <form onSubmit={
+    handleSubmit
+    }> 
+    <label htmlFor="id">Video ID </label>
+    <input
+      name="id"
+      id="id"
+      type="text"
+      value={id}
+      onChange={event => setId(event.target.value)}
+    />
+    <label htmlFor="lang">Available subtitles: </label>
+    <select name="lang" id="lang" onChange={event => setLang(event.target.value)} data-placeholder="Choose a Language...">
+      {/* <option value="">None</option> */}
+      {(langListView.length === 0) ? 
+      <option>None</option> : langListView}
+    </select>
+  <button type="submit">Search</button>
+</form>
+)
+    
+}
+
+function App() {
+  const [{ data, isLoading, isError }, doFetch] = useDataApi(
+    // 'https://junhyukhan.herokuapp.com/new',
+  );
+  const search = <Search doFetch={doFetch}/>;
+
+  const transcriptView = isLoading ? (
+    <div>Loading...</div>
+  ) : (
+    <table>
+      <tbody>
+      {data.lines.map(line => (
+        <tr key={line.start}>
+          <td className="time_subtitle">{line.start}-{line.end}</td>
+          <td>{line.text}</td>
+        </tr>
+      ))}
+      </tbody>
+    </table>
+  );
+
   return (
-    <form onSubmit={event => {
+    <div className="wrapper">
+      <Fragment>
+        {search}
+        {isError ? <div>Something went wrong...</div> : transcriptView}
+        
+          
+      </Fragment>
+    </div>
+  );
+}
+
+const langListd = {"track":[{"langCode":"de"},{"langCode":"ja"},{"langCode":"en"}]};
+
+export default App;
+
+//dL5oGKNlR6I
+//iXLXLCcGINw
+/*
+<form onSubmit={event => {
       props.doFetch(`https://junhyukhan.herokuapp.com/new?id=${id}&lang=${lang}&tlang=${tlang}`);
       event.preventDefault();
   }}>
@@ -136,41 +220,4 @@ function Search(props) {
     <button type="submit">Search</button>
   </form>
   );
-}
-
-function App() {
-  const [{ data, isLoading, isError }, doFetch] = useDataApi(
-    // 'https://junhyukhan.herokuapp.com/new',
-  );
-  const search = <Search doFetch={doFetch}/>;
-
-  const transcriptView = isLoading ? (
-    <div>Loading...</div>
-  ) : (
-    <table>
-      <tbody>
-      {data.lines.map(line => (
-        <tr key={line.start}>
-          <td className="time_subtitle">{line.start}-{line.end}</td>
-          <td>{line.text}</td>
-        </tr>
-      ))}
-      </tbody>
-    </table>
-  );
-
-  return (
-    <div className="wrapper">
-      <Fragment>
-        {search}
-        {isError ? <div>Something went wrong...</div> : transcriptView}
-        
-          
-      </Fragment>
-    </div>
-  );
-}
-
-const langListd = {"track":[{"langCode":"de"},{"langCode":"ja"},{"langCode":"en"}]};
-
-export default App;
+*/
