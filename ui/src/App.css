@@ -1,25 +1,39 @@
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  font-size: 20px;
+}
+
 .App {
   text-align: center;
 }
 
 .wrapper {
+  padding: 80px;
+  border: 2px solid #ccc;
+}
+
+#root, .wrapper {
   display: grid;
-  margin-top: 50px;
+  /* margin-top: 50px;
   border-width: 1px;
   border-color: #282c34;
   grid-template-columns:
     minmax(1.2rem, 1fr)
     minmax(auto, 70ch)
-    minmax(1.2rem, 1fr);
+    minmax(1.2rem, 1fr); */
+  place-items: center;
 }
 
-table, form, div {
+
+
+/* table, form, div {
   grid-column: 2;
 }
 
 .time_subtitle {
   grid-column: 1;
-}
+} */
 
 .App-logo {
   height: 40vmin;

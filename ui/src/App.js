@@ -34,6 +34,20 @@ const useDataApi = (initialUrl = "") => {
   return [{data, isLoading, isError}, setUrl];
 }
 
+const makeUrl = (action="list", id, lang, tlang) => {
+  let url = `https://junhyukhan.herokuapp.com/${action}}?id=${id}`
+  if (id === "") {
+    return ""
+  }
+  if (action === "new") {
+    if (lang === "") {
+      return ""
+    }
+    url += `&lang=${lang}&tlang=${tlang}`
+  }
+  return url
+}
+
 function Search(props) {
   const [id, setId] = useState('');
   const [lang, setLang] = useState('');
@@ -42,18 +56,29 @@ function Search(props) {
   // for fetching langList
   const [{ data, isLoading, isError }, doFetch] = useDataApi();
 
+  let defaultLang = ""
   const langListView = data ? (
-    data.track.map(line => (
-      <option key={line.langCode} value={line.langCode}>{line.langCode}</option>
-    ))
+    data.track.map((line,idx) => {
+      if (idx === 0) {
+        defaultLang = line.langCode
+      }
+      return <option key={line.langCode} value={line.langCode}>{line.langCode}</option>
+    })
   ) : (
     <option value="">Unavailable</option>
   );
 
-  const handleSubmit = async (e) => {
+  useEffect(() => {
+    try {setLang(data.track[0].langCode)} catch {}
+  }, [data])
+  
+  const handleSubmit = (e) => {
     doFetch(`https://junhyukhan.herokuapp.com/list?id=${id}`);
-    console.log(data.track)
-    props.doFetch(`https://junhyukhan.herokuapp.com/new?id=${id}&lang=${lang}&tlang=${tlang}`);
+    if (lang !== "") {   
+      props.doFetch(`https://junhyukhan.herokuapp.com/new?id=${id}&lang=${lang}&tlang=${tlang}`);
+    } else {
+
+    }
     e.preventDefault();
   }
 
