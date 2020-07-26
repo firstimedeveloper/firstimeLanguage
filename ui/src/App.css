@@ -1,7 +1,11 @@
 html, body, #root {
   height: 100%;
   margin: 0;
-  font-size: 20px;
+  /* font-size: 20px; */
+}
+
+#root, .App {
+  display: grid;
 }
 
 .App {
@@ -9,31 +13,49 @@ html, body, #root {
 }
 
 .wrapper {
-  padding: 80px;
-  border: 2px solid #ccc;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
 }
 
-#root, .wrapper {
+/* Add a black background color to the top navigation */
+.navbar {
+  background-color: #f2f2f2;
+  overflow: hidden;
+  transition: top 0.3s; /* Transition effect when sliding down (and up) */
+}
+
+/* Style the links inside the navigation bar */
+.navbar a {
+  float: left;
+  color: #888;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+/* Change the color of links on hover */
+.navbar a:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+/* Add a color to the active/current link */
+.navbar a.active {
+  background-color: #2980b9;
+  color: white;
+}
+
+.main {
   display: grid;
-  /* margin-top: 50px;
-  border-width: 1px;
-  border-color: #282c34;
-  grid-template-columns:
-    minmax(1.2rem, 1fr)
-    minmax(auto, 70ch)
-    minmax(1.2rem, 1fr); */
   place-items: center;
 }
 
-
-
-/* table, form, div {
-  grid-column: 2;
+.search {
+  /* padding : 40px; */
 }
 
-.time_subtitle {
-  grid-column: 1;
-} */
+
 
 .App-logo {
   height: 40vmin;
