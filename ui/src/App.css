@@ -51,8 +51,39 @@ html, body, #root {
   place-items: center;
 }
 
-.search {
-  /* padding : 40px; */
+form {
+  /* just for presentation */
+  border: 5px solid black;
+  display:block;
+	text-align: center;
+}
+form label {
+  /* needed */
+  display: inline-block;
+  padding: 10px 15px;
+  font-size: 20px;
+  border-radius: 0;
+  border: 1px solid transparent;
+  
+  /* optional */
+  background-color: #efefef;
+}
+
+form input[type="text"], form select, form button {
+  /* needed */
+  display: inline-block;
+  padding: 10px 15px;
+  font-size: 20px;
+  border-radius: 0;
+  border: 1px solid transparent;
+  
+  /* optional */
+  /* background-color: lightblue; */
+}
+form:focus {
+  background-color: tomato;
+  color: #fff;
+  outline: 0;
 }
 
 
